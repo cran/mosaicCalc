@@ -2,18 +2,12 @@
 % Please edit documentation in R/Calculus.R
 \name{D}
 \alias{D}
-\alias{D.default}
-\alias{D.formula}
 \alias{antiD}
 \alias{makeAntiDfun}
 \alias{numerical_integration}
 \title{Derivative and Anti-derivative operators}
 \usage{
 D(formula, ..., .hstep = NULL, add.h.control = FALSE)
-
-\method{D}{default}(formula, ..., .hstep = NULL, add.h.control = FALSE)
-
-\method{D}{formula}(formula, ..., .hstep = NULL, add.h.control = FALSE)
 
 antiD(formula, ..., lower.bound = 0, force.numeric = FALSE)
 

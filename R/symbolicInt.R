@@ -1,21 +1,21 @@
-#' Find the symbolic integral of a formula
-#'
-#' @param form an object of type formula to be integrated.
-#' Rhs of formula indicates which variable to
-#' integrate with respect to.  Must only have one variable.
-#' @param \ldots extra parameters
-#'
-#' @details This symbolic integrator recognizes simple polynomials and functions such as
-#' \code{sin}, \code{cos}, \code{tan}, \code{sinh}, \code{cosh}, \code{tanh}, \code{sqrt}, and \code{exp}.
-#'
-#' It will not perform more complicated substitutions
-#' or integration by parts.
-#'
-#' @return symbolicInt returns a function whose body is the symbolic antiderivative of
-#' the formula.  If this method does not recognize the formula, it will return an error.
+# #' Find the symbolic integral of a formula
+# #'
+# #' @param form an object of type formula to be integrated.
+# #' Rhs of formula indicates which variable to
+# #' integrate with respect to.  Must only have one variable.
+# #' @param \ldots extra parameters
+# #'
+# #' @details This symbolic integrator recognizes simple polynomials and functions such as
+# #' \code{sin}, \code{cos}, \code{tan}, \code{sinh}, \code{cosh}, \code{tanh}, \code{sqrt}, and \code{exp}.
+# #'
+# #' It will not perform more complicated substitutions
+# #' or integration by parts.
+# #'
+# #' @return symbolicInt returns a function whose body is the symbolic antiderivative of
+# #' the formula.  If this method does not recognize the formula, it will return an error.
 #'
 #' @importFrom methods getGroup
-#' @export
+#'
 
 symbolicInt<- function(form, ...){
   dots = list(...)
@@ -41,14 +41,14 @@ symbolicInt<- function(form, ...){
   return(intfun)
 }
 
-#' Use recursion to find a symbolic antiderivative
-#'
-#' @rdname symbolicInt
-#'
-#' @return a formula implementing giving symbolic anti-derivative.  If the formula
-#' isn't found by the algorithm, an error is thrown.
-#'
-#' @export
+# #' Use recursion to find a symbolic antiderivative
+# #'
+# #' #(at)rdname symbolicInt
+# #'
+# #' @return a formula implementing giving symbolic anti-derivative.  If the formula
+# #' isn't found by the algorithm, an error is thrown.
+# #'
+# #' #(at)export
 
 symbolicAntiD <- function(form, ...){
   rhsVar = all.vars(rhs(form))
@@ -85,12 +85,11 @@ symbolicAntiD <- function(form, ...){
   stop("Error: symbolic algorithm gave up")
 }
 
-#' Attempts symbolic integration of some mathematical/arithmetical forms
-#'
-#' @rdname symbolicInt
-#'
-#' @return An expression with the integral, or throws an error if unsuccessful.
-#'
+# #' Attempts symbolic integration of some mathematical/arithmetical forms
+# #'
+# #'
+# #' @return An expression with the integral, or throws an error if unsuccessful.
+# #'
 .intArith <- function(form, ...){
   dots = list(...)
 
@@ -207,12 +206,11 @@ symbolicAntiD <- function(form, ...){
 }
 
 #--------------------------
-#' Attempts symbolic integration of some mathematical forms
-#'
-#' @rdname symbolicInt
-#'
-#' @return An expression with the integral, or throws an error if unsuccessful.
-#'
+# #' Attempts symbolic integration of some mathematical forms
+# #'
+# #'
+# #' @return An expression with the integral, or throws an error if unsuccessful.
+# #'
 .intMath <- function(form, ...){
 
   op = lhs(form)[[1]]
@@ -346,17 +344,16 @@ symbolicAntiD <- function(form, ...){
 
 #-------------------------
 
-#' Attempts symbolic integration of some mathematical forms using trigonometric substitution
-#'
-#' @rdname symbolicInt
-#'
-#' @param num numerator
-#' @param den denominator
-#' @param .x. the variable name
+# #' Attempts symbolic integration of some mathematical forms using trigonometric substitution
+# #'
+# #'
+# #' @param num numerator
+# #' @param den denominator
+# #' @param .x. the variable name
 
-#'
-#' @return An expression with the integral, or throws an error if unsuccessful.
-#'
+# #'
+# #' @return An expression with the integral, or throws an error if unsuccessful.
+# #'
 .intTrig <- function(form, num, den, .x.){
   params <- all.vars(num)
   if(length(params) == 0)
@@ -540,14 +537,14 @@ symbolicAntiD <- function(form, ...){
 }
 
 
-#' Takes a call and returns its affine coefficients.
-#'
-#' @rdname symbolicInt
-#'
-#' @param tree the expression to be analyzed
-#' @return A list with values of a and b satisfying a*.x.+b  = tree.
-#' If the expression is not affine, returns an empty list.
-#'
+# #' Takes a call and returns its affine coefficients.
+# #'
+# #' #(at)rdname symbolicInt
+# #'
+# #' @param tree the expression to be analyzed
+# #' @return A list with values of a and b satisfying a*.x.+b  = tree.
+# #' If the expression is not affine, returns an empty list.
+# #'
 .affine.exp <- function(tree, .x.){
   #if it is a simple expression
   if(tree==.x.){
@@ -691,9 +688,9 @@ symbolicAntiD <- function(form, ...){
   return(list())
 }
 
-#' Simplifying expressions, e.g. pure numbers go to numbers
-#' Written by Aaron Mayerson, May 2013
-#' @rdname mosaic-internal
+# #' Simplifying expressions, e.g. pure numbers go to numbers
+# #' Written by Aaron Mayerson, May 2013
+# #' #(at)rdname mosaic-internal
 .makeNice <- function(form,params=all.vars(form)){
   # See if the MASS package fraction simplifier is installed, if not
   # leave fractions in decimal form

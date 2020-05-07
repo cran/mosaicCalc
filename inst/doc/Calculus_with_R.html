@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Daniel Kaplan" />
+
+<meta name="date" content="2020-05-06" />
+
+<title>Calculus with R</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Calculus with R</h1>
+<h4 class="author">Daniel Kaplan</h4>
+<h4 class="date">May 6, 2020</h4>
+
+
+
+<p>The <code>mosaicCalc</code> package provides basic functions for computing derivatives and anti-derivatives, as well as for integrating ordinary differential equations. It is designed for teaching calculus.</p>
+<p><code>mosaicCalc</code> extends the <code>mosaic</code> package. Graphics capabilities for displaying functions built with <code>mosaicCalc</code> are provided by <code>mosaic</code>, <code>ggformula</code>, and related packages.</p>
+<p>Install <code>mosaicCalc</code> CRAN using the usual method. The GitHub repository for the package is <code>github.com/ProjectMOSAIC/mosaicCalc</code> and the latest patch can be installed from there using <code>remotes::install_github(&quot;ProjectMOSAIC/mosaicCalc)</code>.</p>
+<p>When using <code>mosaicCalc</code>, typically, you will also want to work with <code>mosaic</code>. So load both packages:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(mosaic)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(mosaicCalc)</span></code></pre></div>
+<div id="calculus-computing-and-notation" class="section level2">
+<h2>Calculus, computing, and notation</h2>
+<p>A dominant style of notation in teaching calculus is the analytic style, where functions are written in the form <span class="math inline">\(f = 1 / x\)</span>, derivatives are referred to in any of several notations such as <span class="math inline">\(f&#39;\)</span> or <span class="math inline">\(\frac{d}{dx} f\)</span>. Integrals are denoted <span class="math inline">\(\int f(x) dx\)</span>. In this notation, <span class="math inline">\(dx\)</span> is a formal device that serves to identify the variable with respect to which the operation of integration or differentiation is being performed.</p>
+<p>This contrasts with mainstream computer languages where functions are identified by <em>names</em> and there is no universal notation for “with respect to ….”. The calculus operations in <code>mosaicCalc</code> exploit the tilde-formula notation in R, e.g. <code>1 / x ~ x</code>. The symbol on the right-hand side of tilde identifies the variable with respect to which the operation is to be performed. To the left of tilde is a statement in standard computer notation of the transformation carried out by the function.</p>
+<p>Traditionally, a typographic distinction is made between “variables” and “parameters.” For instance, it’s implicit that the straight-line function <span class="math inline">\(mx + b\)</span> involves the variable <span class="math inline">\(x\)</span> and the parameters <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span>. Usually the <em>variables</em> are letters toward the end of the alphabet such as <span class="math inline">\(t\)</span>, <span class="math inline">\(x\)</span>, and <span class="math inline">\(y\)</span> whereas <em>parameters</em> are written using earlier letters in the alphabet (e.g., <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, <span class="math inline">\(c\)</span>, <span class="math inline">\(k\)</span>) sometimes using upper-case letters, Greek letters, and/or subscripts.</p>
+<p>In <code>mosaicCalc</code>, no formal distinction is made between variables and parameters except as provided by the “with respect to …” component of a formula. In <code>mosaicCalc</code> you would write <code>m * x + b ~ x</code> as a formula for a straight-line function.</p>
+<p>A formula like <code>m * x + b ~ x</code> stands for a function, but it is not an R function. Formulas in <code>mosaicCalc</code> are routinely turned into actual R functions. This happens automatically in operations such as differentiation and anti-differentiation, which return a function rather than a formula.</p>
+<p>The operation <code>makeFun()</code> in <code>mosaicCalc</code> performs this action. For instance, here is the definition of a function called <code>f</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>f &lt;-<span class="st"> </span><span class="kw">makeFun</span>(m <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span>b <span class="op">~</span><span class="st"> </span>x)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>f</span></code></pre></div>
+<pre><code>## function (x, m, b) 
+## m * x + b</code></pre>
+<p>Note that <code>f</code> is a function of <em>three</em> arguments. There’s no formal distinction being made between the “variable” and the “parameters.” (<code>makeFun()</code> can also be used to turn linear and logistic regression reports into functions.)</p>
+<p>Contrast this with the way an R programmer might naturally define the straight-line function:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># NOT the style in mosaicCalc</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>straight_line &lt;-<span class="st"> </span><span class="cf">function</span>(x) m <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span>b</span></code></pre></div>
+<p><code>straight_line</code> is a legitimate function in R, but the parameters <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span> are not represented by arguments to the function. Instead, they are set by the scoping rules of the R language. In particular, given this definition of <code>straight_line</code>, at the time that <code>straight_line()</code> is applied to an input, the values of <code>m</code> and <code>b</code> will be looked up in the R environment in which the function was defined.</p>
+<p>The <code>mosaicCalc</code> approach is to avoid as much as possible the need to understand the lexical scoping used by R. And so <em>every</em> quantity in a function made by the likes of <code>makeFun()</code> will become an argument.</p>
+<p>In <code>makeFun()</code> the “with respect to …” component of the formula is used only to determine the order of the arguments: symbols used on the right-hand side of the tilde are put first in the argument list.</p>
+</div>
+<div id="differentiation-and-anti-differentiation" class="section level2">
+<h2>Differentiation and anti-differentiation</h2>
+<p>The <code>mosaicCalc</code> operations for differentiation and anti-differentiation are called <code>D()</code> and <code>antiD()</code> respectively. Like <code>makeFun()</code>, <code>D()</code> and <code>antiD()</code> take as a primary argument a <em>formula</em> where the right-hand side identifies the “with respect to …” variable. And, all three of those operations are similar in that they return a <em>function</em> (not a formula) whose arguments include every symbol used in the body of the function.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">D</span>(a <span class="op">/</span><span class="st"> </span>x <span class="op">~</span><span class="st"> </span>x)</span></code></pre></div>
+<pre><code>## function (x, a) 
+## -(a/x^2)</code></pre>
+<p>In all three operations, you can declare a default value for the parameter, which enables you have the parameter symbolically identified while not having to assign a value to the parameter every time it is evaluated. For instance,</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">makeFun</span>(a <span class="op">/</span><span class="st"> </span>x <span class="op">~</span><span class="st"> </span>x, <span class="dt">a =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## function (x, a = 3) 
+## a/x</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">D</span>( a <span class="op">/</span><span class="st"> </span>x <span class="op">~</span><span class="st"> </span>x, <span class="dt">a =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## function (x, a = 3) 
+## -(a/x^2)</code></pre>
+<p>Famously, anti-differentiation introduces an additive quantity usually denoted C, so <span class="math inline">\(\int 1/x\ dx \rightarrow \ln x + C\)</span>. This <span class="math inline">\(C\)</span> is treated as a parameter in the output of <code>mosaicCalc::antiD()</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">antiD</span>(a <span class="op">/</span><span class="st"> </span>x <span class="op">~</span><span class="st"> </span>x)</span></code></pre></div>
+<pre><code>## function (x, C = 0, a) 
+## a * log((x)) + C</code></pre>
+</div>
+<div id="analytic-or-numeric" class="section level2">
+<h2>Analytic or numeric</h2>
+<p>The symbolic capabilities of <code>mosaicCalc</code> are weak. Only a few, simple forms of functions can be handled symbolically by <code>antiD()</code>. The <code>D()</code> operation is similarly limited, although it handles composition and linear combinations of functions well. For instance:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">D</span>(a <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span>b <span class="op">*</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>c <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(x<span class="op">^</span><span class="dv">2</span>) <span class="op">~</span><span class="st"> </span>x)</span></code></pre></div>
+<pre><code>## function (x, a, b, c) 
+## a + b * (2 * x) + c * (cos(x^2) * (2 * x))</code></pre>
+<p>while <code>antiD()</code> will generate a numeric-integration result:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>F &lt;-<span class="st"> </span><span class="kw">antiD</span>(a <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span>b <span class="op">*</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>c <span class="op">*</span><span class="st"> </span><span class="kw">sin</span>(x<span class="op">^</span><span class="dv">2</span>) <span class="op">~</span><span class="st"> </span>x)</span>
+<span id="cb15-2"><a href="#cb15-2"></a>F</span></code></pre></div>
+<pre><code>## function (x, a, b, c, C = 0) 
+## {
+##     numerical_integration(.newf, .wrt, as.list(match.call())[-1], 
+##         formals(), from, ciName = intC, .tol)
+## }
+## &lt;environment: 0x7fe9bd712438&gt;</code></pre>
+<p>Note that even though the function <code>F()</code> involves applying numerical methods, it is still a function and can itself be differentiated or integrated using <code>D()</code> and <code>antiD()</code> in <code>mosaicCalc</code>.</p>
+</div>
+<div id="graphics" class="section level2">
+<h2>Graphics</h2>
+<p>The meaning of “with respect to …” when making a graphic is to set the coordinate axes. For instance, the <code>mosaic</code> package includes a function <code>plotFun()</code></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>mosaic<span class="op">::</span><span class="kw">plotFun</span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span>x <span class="op">~</span><span class="st"> </span>x, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">5</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><code>plotFun()</code> can be thought of as a legacy function. It uses the <code>lattice</code> graphics system. (We plan soon to be adding <code>ggplot2</code> compatible calculus graphics functions.)</p>
+</div>
+<div id="section" class="section level2">
+<h2></h2>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

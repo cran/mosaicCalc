@@ -73,7 +73,7 @@ D <- function(formula, ..., .hstep=NULL,add.h.control=FALSE){
     UseMethod("D")
 }
 
-#' @rdname Calculus
+#'
 #' @export
 D.default <- function(formula, ..., .hstep=NULL,add.h.control=FALSE){
   tryCatch( return( stats::D(formula, ...) ), error=function(e) {}  )
@@ -82,7 +82,7 @@ D.default <- function(formula, ..., .hstep=NULL,add.h.control=FALSE){
               "Example:  D(sin(x) ~ x).", sep ="\n  " ) )
 }
 
-#' @rdname Calculus
+#'
 #' @export
 D.formula <- function(formula, ..., .hstep=NULL,add.h.control=FALSE){
   tryCatch( return( stats::D(formula, ...) ), error=function(e) {}  )
