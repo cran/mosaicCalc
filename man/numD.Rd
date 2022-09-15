@@ -4,19 +4,19 @@
 \alias{numD}
 \title{Numerical Derivatives}
 \usage{
-numD(formula, ..., .hstep = NULL, add.h.control = FALSE)
+numD(tilde, ..., .h = NULL)
 }
 \arguments{
-\item{formula}{a mathematical expression (see examples and \code{\link{plotFun}})}
+\item{tilde}{a mathematical expression (see examples and \code{\link{plotFun}})}
 
-\item{...}{additional parameters, typically default values for mathematical parameters}
+\item{\dots}{additional parameters, typically default values for mathematical parameters}
 
-\item{.hstep}{numerical finite-difference step (default is 1e-6 or 1e-4 for first and second-order derivatives, respectively)}
-
-\item{add.h.control}{arranges the returned function to have a \code{.hstep} argument that can be used to demonstrate convergence and error}
+\item{.h}{numerical step size to enforce.}
 }
 \value{
-a function implementing the derivative as a finite-difference approximation
+a function implementing the derivative as a finite-difference approximation.
+This has a second argument, \code{.h}, that allow the finite-difference to be set when evaluating
+the function. The default values are set for reasonable numerical precision.
 }
 \description{
 Constructs the numerical derivatives of mathematical expressions
@@ -28,7 +28,7 @@ at the time the derivative is constructed and that original function is re-evalu
 finitely-spaced points of an interval.  If you redefine the original function, that won't affect
 any derivatives that were already defined from it.
 Numerical derivatives, particularly high-order ones, are unstable.  The finite-difference parameter
-\code{.hstep} is set, by default, to give reasonable results for first- and second-order derivatives.
+\code{.h} is set, by default, to give reasonable results for first- and second-order derivatives.
 It's tweaked a bit so that taking a second derivative by differentiating a first derivative
 will give reasonably accurate results.  But,
 if taking a second derivative, much better to do it in one step to preserve numerical accuracy.
@@ -45,9 +45,8 @@ ggg = numD( a*x^2 + x*y ~ x&y, a=1)
 ggg(x=2,y=10)
 h = numD( g(x=x,y=y,a=a) ~ y, a=1)
 h(x=2,y=10)
-f = numD( sin(x)~x, add.h.control=TRUE)
-# plotFun( f(3,.hstep=h)~h, hlim=range(.00000001,.000001))
-# ladd( panel.abline(cos(3),0))
+f = numD( sin(x)~x)
+# slice_plot( f(3,.h=hlim)~h, bounds(h=.00000001 :000001)) \%>\% gf_hline(yintercept = cos(3))
 
 }
 \author{

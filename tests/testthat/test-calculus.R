@@ -53,8 +53,19 @@ test_that("default values of parameters retained in the anti-derivative",{
   expect_that( formals(g)[["A"]], equals(10))
 })
 
+test_that("numerical derivatives work", {
+  g <- numD( a*x^2*y^2 ~ x, a=10) # numerical
+  expect_that( g(x=1:10,y=5), equals(500*(1:10),tol=.0001) )
+  g <- D( a*x^2*y^2 ~ x, a=10) # symbolic
+  expect_that( g(x=1:10,y=5), equals(500*(1:10),tol=.0000001) )
+  
+  numD(ff(x, y, a=20) ~ y)
+  numD(ff(x, y, a=20) ~ y & y)
+  # make sure arguments are in the right order internally
+})
+
 test_that("mixed partials work", {
-  g <- D( a*x^2*y^2 ~ x&y, a=10) # numerical
+  g <- numD( a*x^2*y^2 ~ x&y, a=10) # numerical
   expect_that( g(x=1:10,y=5), equals(10*2*2*(1:10)*5,tol=.0001) )
   g <- D( a*x^2*y^2 ~ x&y, a=10) # symbolic
   expect_that( g(x=1:10,y=5), equals(10*2*2*(1:10)*5,tol=.0000001) )
@@ -96,7 +107,7 @@ test_that("Integrals work with Inf args",{
 })
 
 test_that("Initial condition (constant of integration) works", {
-  f <- antiD( 1+ 0*exp(t^2)~t, force.numerical=TRUE) #numerical
+  f <- antiD( 1+ 0*exp(t^2)~t, force.numeric=TRUE) #numerical
   expect_that( f(t=0), equals(0, tol=0.00001))
   expect_that( f(t=5), equals(5, tol=0.00001))
   expect_that( f(t=0, C=2), equals(2, tol=0.00001))
@@ -105,7 +116,7 @@ test_that("Initial condition (constant of integration) works", {
 
 test_that("Symbols for constant of integration work", {
   vel <- antiD( -9.8 + 0*exp(t^2) ~ t  ) # numerical
-  pos <- antiD( vel(t = t, C = v0) ~ t, v0 = 0 )
+  pos <- antiD( vel(t, C = v0) ~ t, v0 = 0 )
   expect_that(pos(5, v0=10, C=100), equals(27.5,tol=0.00001) )
 })
 
@@ -129,17 +140,26 @@ test_that("integrals work in other functions", {
   expect_that( h(4),equals(f(4,a=20)))
 })
 
-test_that("integrals and derivatives interoperate", {
-  F <- antiD(x~x)
-  f <- D( F(x=x)~x )
-  expect_that( f(3),equals(3,tol=0.00001))
-})
+# test_that("integrals and derivatives interoperate", {
+#   F <- antiD(x~x)
+#   f <- mosaicCalc::D( F(x)~x )
+#   expect_true( f(3) - 3 == 0)
+# })
+
+test_that("Integrate() handles numerical integration", {
+  f <- makeFun(sin(x)^2 + cos(x)^2 ~ x & y)
+  expect_that(Integrate(f(x,y)~ x&y, domain(x=0:2, y=-5:5)), equals(20, tol=0.00001))
+  expect_that(Integrate(f(x,y)~ x&y, domain(x=2:0, y=-5:5)), equals(-20, tol=0.00001))
+  expect_that(Integrate(x ~ x + y, domain(x=0:10, y=0:2)), equals(100))
+  expect_that(Integrate(x ~ x + y, domain(x=0:2, y=0:10)), equals(20))
+  })
+
 
 test_that("integrals work on integrals", {
-  one <- makeFun(1~ x & y, x = 1, y = 2)
-  by.x <- antiD( one(x=x, y=y) ~ x, y = 2 )
-  by.xy <- antiD(by.x(x=sqrt(1-y^2), y=y)~y)
-  expect_that( by.xy(y=1)-by.xy(y=-1), equals(pi/2,tol=0.00001))
+  one <- makeFun(1 ~ x)
+  by_x <- antiD( one(x) ~ x)
+  by_xy <- antiD(by_x(sqrt(1-y^2))~y)
+  expect_that( by_xy(y=1)-by_xy(y=-1), equals(pi/2,tol=0.00001))
 })
 
 test_that("Basic numerical differentiation works", {
@@ -165,9 +185,9 @@ test_that("symbolic parameters are passed correctly",{
 })
 
 test_that("Derivatives can be iterated.",{
-  g <- numD( a*x^3 ~ x, a=10, .hstep=.001)
-  gg <- numD( g(y)~y, .hstep=.001 )
-  ggg <- numD( gg(x)~x, .hstep=.001 )
+  g <- numD( a*x^3 ~ x, a=10, .h=.001)
+  gg <- numD( g(y)~y, .h=.01 )
+  ggg <- numD( gg(x)~x, .h=.01 )
   expect_that(gg(3), equals(180, tol=.01))
   expect_that(ggg(3), equals(60, tol=.01))
 })
@@ -186,17 +206,12 @@ test_that("Vars. killed by differentiation remain arguments",{
   expect_that(g(f=2, h=1), equals(4,tol=0.0001))
 })
 
-test_that("add.h.control works",{
-  f <- mosaicCalc:::numD( sin(x)~x, add.h.control=TRUE)
-  expect_that(f(3, .hstep=1),
-              equals(-.83305,tol=0.0001))
-})
 
 test_that("symbolic derivative on simple function works",{
   f <- makeFun(x^2~x)
   g <- makeFun(sin(x)+x~x)
-  fprime <- D(f(z)~z)
-  gprime <- D(g(y)~y)
+  fprime <- numD(f(z)~z)
+  gprime <- numD(g(y)~y)
   expect_that(fprime(5), equals(2*5, tol=0.0000001))
   expect_that(gprime(2), equals(cos(2)+1, tol=0.0000001))
 })
@@ -208,4 +223,5 @@ test_that("integration bug with -Inf as lower bound is worked around",{
   G <- antiD(g(x)~x)
   expect_that(G(-Inf), equals(0, tol=0.00001))
 })
+
 
